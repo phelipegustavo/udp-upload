@@ -1,0 +1,4 @@
+htdocs/api.dev/public/uploads/*
+mysql/data/*
+nginx/logs
+.env
