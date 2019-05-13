@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <?php require_once 'config.php' ?>
+    <?php require_once '../config/config.php' ?>
     
     <center><h2> UDP Files Upload </h2></center>
     
@@ -21,7 +21,7 @@
     <br>
     <hr>
     
-    <a class="udp--link" href="/list.php"> Arquivos enviados </a>
+    <a class="udp--link" href="/api.dev/public/list.php"> Arquivos enviados </a>
 
     <script src="js/dropzone.min.js"></script>
     <script>

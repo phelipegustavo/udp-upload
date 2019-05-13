@@ -1,5 +1,6 @@
 <?php
-    require_once 'config.php';
+    require_once '../dao/DB.php';
+    require_once '../config/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,10 +13,16 @@
 </head>
 <body>
     
-    <?php $files = scandir(__DIR__.'/uploads/'); ?>
+    <?php 
+    
+        $dao = new DB();
+        $files = $dao->list();
+
+        $re = '/image\/*/m';
+    ?>
     
     <center>
-        <h2> Exibindo <?= count($files) - 2  ?> Arquivos </h2>
+        <h2> Exibindo <?= count($files) ?> Arquivos </h2>
     </center>
     
     <div class="image-box-wrapper" id="image-box-wrapper">
@@ -23,18 +30,26 @@
         
     <?php
         foreach ($files as $file) {
-            if($file !== '..' && $file !== '.') {
-                $url='http://' . APP_HOST . ':' . APP_PORT. '/uploads/'. $file;
+            $url='http://' . APP_HOST . ':' . APP_PORT. '/uploads/'. $file->hash . '.' . $file->type;
     ?>
 
                 <!-- `.image-box` start -->
                 <div class="image-box">
                     <div class="image-container">
-                        <img src="<?=$url?>" alt="" width="200" height="150">
+                        <?php 
+                            preg_match_all($re, $file->mime, $matches, PREG_SET_ORDER, 0);
+                            if($matches[0][0] === "image/"){
+                        ?>
+                            <img src="<?=$url?>" alt="<?=$file->name?>" width="200" height="150">
+                        
+                        <?  } else { ?>
+                            <h5> Previsualização nao disponível <h5>
+                        <?php } ?>
+
                     </div>
                     <div class="image-details">
                         <div class="details">
-                            <h4><?=$file?></h4>
+                            <h4><?=$file->name?></h4>
                             <p><a class="more" target="_blank" href="<?=$url?>">Abrir</a></p>
                         </div>
                     </div>
@@ -42,7 +57,6 @@
                 <!-- `.image-box` end -->
 
     <?php
-            }
         }
     ?>
 

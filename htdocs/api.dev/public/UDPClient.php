@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config.php';
+require_once '../config/config.php';
 
 Class UDPClient {
 
@@ -27,11 +27,11 @@ Class UDPClient {
     }
 
     function send($filename) {
-
+        
         $handle = fopen($filename, "rb"); 
         $fsize = filesize($filename); 
         $contents = fread($handle, $fsize); 
-
+                
         //Send the message to the server
         if( ! socket_sendto($this->sock, $contents , strlen($contents) , 0 , SERVER_HOST , SERVER_PORT))
         {
@@ -42,7 +42,7 @@ Class UDPClient {
         }
             
         //Now receive reply from server and print it
-        if(socket_recv ($this->sock , $reply , MAX_BUFFER_SIZE , MSG_WAITALL ) === FALSE)
+        if(socket_recv ($this->sock , $hash , MAX_BUFFER_SIZE , MSG_WAITALL ) === FALSE)
         {
             $err = socket_last_error();
             $msg = socket_strerror($err);
@@ -50,7 +50,7 @@ Class UDPClient {
             die("Could not receive data: [$err] $msg \n");
         }
 
-        echo "Reply : $reply";
-
+        echo "Hash : $hash";
+        return $hash;
     }
 }
