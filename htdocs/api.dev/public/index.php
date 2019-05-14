@@ -26,7 +26,7 @@
     
     <a 
         class="udp--link" 
-        href="<?=APP_HOST.':'.APP_PORT?>/api.dev/public/list.php"
+        href="<?='http://' . APP_HOST.':'.APP_PORT?>/list.php"
     > Arquivos enviados </a>
 
     <script src="js/dropzone.min.js"></script>
