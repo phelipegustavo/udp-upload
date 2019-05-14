@@ -5,13 +5,15 @@ require_once "../model/Upload.php";
 
 $file = $_FILES['file'];
 $filename = $file['tmp_name'];
+$hash = $_POST['dzuuid'];
+$mime = $_POST['mime'];
+
+$upload = new Upload($hash, $filename, $mime);
 
 // Send to UDP
 $client = new UDPClient();  
-$hash = $client->send($filename);
+$hash = $client->send($upload);
 
-// Send to database
-$dao = new DB();
-$upload = new Upload($hash, $file['name'], $file['type']);
-$dao->create($upload);
+header('Content-Type: application/json');
+echo json_encode($upload);
 

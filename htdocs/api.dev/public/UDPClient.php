@@ -23,17 +23,20 @@ Class UDPClient {
             die("Couldn't create socket: [$errorcode] $errormsg \n");
         }
         
-        echo "Socket created \n";
+        // echo "Socket created \n";
     }
 
-    function send($filename) {
+    function send($upload) {
         
-        $handle = fopen($filename, "rb"); 
-        $fsize = filesize($filename); 
+        $handle = fopen($upload->name, "rb"); 
+        $fsize = filesize($upload->name); 
         $contents = fread($handle, $fsize); 
-                
+        $upload->content = utf8_encode($contents);
+
+        $json = json_encode($upload);
+        
         //Send the message to the server
-        if( ! socket_sendto($this->sock, $contents , strlen($contents) , 0 , SERVER_HOST , SERVER_PORT))
+        if( ! socket_sendto($this->sock, $json, strlen($json) , 0 , SERVER_HOST , SERVER_PORT))
         {
             $err = socket_last_error();
             $msg = socket_strerror($err);
@@ -50,7 +53,7 @@ Class UDPClient {
             die("Could not receive data: [$err] $msg \n");
         }
 
-        echo "Hash : $hash";
+        echo $hash;
         return $hash;
     }
 }

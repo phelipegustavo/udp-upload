@@ -11,31 +11,45 @@
 
     <?php require_once '../config/config.php' ?>
     
-    <center><h2> UDP Files Upload </h2></center>
+    <center>
+        <h2> UDP Files Upload </h2>
+    </center>
     
-    <form method="POST"
+    <form 
+        method="POST"
         class="dropzone"
-        id="dz">
-    </form>
+        id="dz"
+    ></form>
     
     <br>
     <hr>
     
-    <a class="udp--link" href="/api.dev/public/list.php"> Arquivos enviados </a>
+    <a 
+        class="udp--link" 
+        href="<?=APP_HOST.':'.APP_PORT?>/api.dev/public/list.php"
+    > Arquivos enviados </a>
 
     <script src="js/dropzone.min.js"></script>
     <script>
-		const dz = document.getElementById('dz');
-		Dropzone.options.dz = {
+
+        Dropzone.options.dz = {
 			url: 'send.php',
+            chunking: true,
 			paramName: "file",
-			maxFilesize: 0.07, // MB
             addRemoveLinks: true,
+            multiple: false,
+            chunkSize: 10000,
 
             // messages
-            dictDefaultMessage: "Envie seus arquivos aqui..."
+            dictDefaultMessage: "Envie seus arquivos aqui...",
+            
+            sending: (file, xhr, formData) => {
+                formData.append('mime', file.type);
+                formData.append('hash', file.upload.uuid);
+            },
 		}
     </script>
+
     <style>
         .dropzone .dz-preview.dz-image-preview{
             background-color: #e3f2fd;
