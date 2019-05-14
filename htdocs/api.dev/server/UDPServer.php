@@ -50,19 +50,19 @@ Class UDPServer {
             echo "Waiting for data ... ";
             
             //Receive some data
-            $size = socket_recvfrom($this->sock, $buf, MAX_BUFFER_SIZE, 0, $remote_ip, $remote_port);
+            $size = socket_recvfrom($this->sock, $data, MAX_BUFFER_SIZE, 0, $remote_ip, $remote_port);
 
-            $hash = md5(time().rand(0, 100));
+            $upload = json_decode($data);
+
+            // hash
+            $hash = $upload->hash ? $upload->hash : md5(time().rand(0, 100));
             
-            $finfo = new finfo(FILEINFO_MIME);
-            $extension = getExtension(explode('; ', $finfo->buffer($buf))[0]);
-            $filename = "../public/uploads/" . $hash . '.' . $extension;
-            
-            // echo "FILE:: ". $filename;
-            $file = fopen($filename, "w");
-            
-            fwrite($file, $buf);
-            // echo "$remote_ip : $remote_port -- " . $buf;
+            // extension
+            $type = $upload->type;
+
+            // write
+            $filename = "../public/uploads/" . $hash . '.' . $type;            
+            file_put_contents($filename, utf8_decode($upload->content), FILE_APPEND);
             
             //Send back the data to the client
             socket_sendto($this->sock, $hash , MAX_BUFFER_SIZE, 0 , $remote_ip , $remote_port);
