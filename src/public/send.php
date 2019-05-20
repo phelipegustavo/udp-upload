@@ -1,6 +1,5 @@
 <?php
 require_once "UDPClient.php";
-require_once "../dao/DB.php";
 require_once "../model/Upload.php";
 
 $file = $_FILES['file'];
