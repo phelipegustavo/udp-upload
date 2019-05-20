@@ -1,5 +1,4 @@
 <?php
-    require_once '../dao/DB.php';
     require_once '../config/config.php';
 ?>
 
